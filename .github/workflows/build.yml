@@ -17,18 +17,20 @@ jobs:
           java-version: '17'
 
       - name: Install Android SDK
-        run: |
-          mkdir -p $ANDROID_HOME/cmdline-tools/latest
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip -q commandlinetools-linux-*.zip -d temp
-          mv temp/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
-          rm -rf temp *.zip
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
-            "platform-tools" \
-            "platforms;android-34" \
-            "build-tools;35.0.0" \
-            "ndk;29.0.14206865"
+  run: |
+    # 删除预装的 cmdline-tools（如果存在）
+    rm -rf $ANDROID_HOME/cmdline-tools
+    mkdir -p $ANDROID_HOME/cmdline-tools/latest
+    wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+    unzip -q commandlinetools-linux-*.zip -d temp
+    mv temp/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
+    rm -rf temp *.zip
+    yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+    $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
+      "platform-tools" \
+      "platforms;android-34" \
+      "build-tools;35.0.0" \
+      "ndk;29.0.14206865"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
